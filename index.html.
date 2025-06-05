@@ -1,0 +1,52 @@
+// Khởi tạo scene, camera và renderer
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// Tạo vạch trắng
+const groundGeometry = new THREE.BoxGeometry(20, 0.1, 1); // Rộng 20, cao 0.1, sâu 1
+const groundMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // Màu trắng
+const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+ground.position.y = -0.5; // Đặt thấp hơn
+scene.add(ground);
+
+// Tạo hai cây cột
+const columnGeometry = new THREE.CylinderGeometry(0.2, 0.2, 2, 32); // Bán kính 0.2, cao 2
+const columnMaterial = new THREE.MeshBasicMaterial({ color: 0x808080 }); // Màu xám
+
+const column1 = new THREE.Mesh(columnGeometry, columnMaterial);
+column1.position.set(-2, 0.5, 0); // Đặt cột 1 bên trái
+scene.add(column1);
+
+const column2 = new THREE.Mesh(columnGeometry, columnMaterial);
+column2.position.set(2, 0.5, 0); // Đặt cột 2 bên phải
+scene.add(column2);
+
+// Đặt camera ban đầu
+camera.position.z = 5;
+camera.position.y = 1;
+
+// Biến cho hoạt ảnh
+let angle = 0;
+const radius = 5;
+const center_x = 0;
+const center_z = 0;
+
+// Hàm hoạt ảnh
+function animate() {
+    requestAnimationFrame(animate);
+
+    // Di chuyển camera quanh điểm trung tâm của hai cột
+    angle += 0.01; // Tăng góc để quay
+    camera.position.x = center_x + radius * Math.cos(angle);
+    camera.position.z = center_z + radius * Math.sin(angle);
+
+    // Camera luôn nhìn về điểm trung tâm của hai cột
+    camera.lookAt(new THREE.Vector3(center_x, 0, center_z));
+
+    renderer.render(scene, camera);
+}
+
+animate();
